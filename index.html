@@ -1,0 +1,60 @@
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>دفتر شخصی</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#17313b">
+<style>
+:root{--bg:#eef2f1;--c:#fff;--t:#17313b;--m:#5f7279;--p:#0f766e;--r:#b91c1c;--o:#b45309;--b:#d5dedc;--h:#17313b}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1a1e;--c:#17262b;--t:#e6eeee;--m:#8fa4aa;--p:#2dd4bf;--r:#f87171;--o:#fbbf24;--b:#27393f;--h:#0b1417}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:15px/1.7 Tahoma,system-ui,sans-serif;padding-bottom:76px}
+header{background:var(--h);color:#e6eeee;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px;display:flex;justify-content:space-between;align-items:center}header b{font-size:18px}header small{opacity:.75}
+main{max-width:720px;margin:0 auto;padding:12px}h3{margin:18px 0 6px;font-size:15px}.m{color:var(--m);font-size:13px;margin:4px 0}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cd{background:var(--c);border:1px solid var(--b);border-radius:10px;padding:8px 12px;position:relative;display:flex;flex-direction:column}.cd span{font-size:12px;color:var(--m)}.cd b{font-size:20px}.cd.hi{border:2px solid var(--p)}.cd .ic{position:absolute;left:4px;top:4px}
+.cd2{background:var(--c);border:1px solid var(--b);border-radius:10px;padding:8px 12px;margin:10px 0}.h{display:flex;justify-content:space-between;align-items:center}
+.r{display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--b)}.r .n{flex:1;display:flex;flex-direction:column;min-width:0}.r small{color:var(--m);font-size:12px}.a{font-weight:700;white-space:nowrap}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--p)}
+.ic{background:none;border:0;font-size:17px;padding:4px;cursor:pointer;color:inherit}
+.bt{display:block;width:100%;margin:10px 0;padding:11px;border:1px dashed var(--p);background:none;color:var(--p);border-radius:10px;font:inherit;font-weight:700;cursor:pointer}
+.neg,.r.neg .a{color:var(--r)}.wn{color:var(--o)}.ok{color:var(--p)}
+.bar,.pb{height:6px;background:var(--b);border-radius:3px;overflow:hidden;margin:6px 0}.bar i,.pb u{display:block;height:100%;background:var(--p)}.pb u.neg{background:var(--r)}.pb u.wn{background:var(--o)}.pb{margin:3px 0 0}
+nav{position:fixed;bottom:0;inset-inline:0;display:flex;background:var(--c);border-top:1px solid var(--b);padding-bottom:env(safe-area-inset-bottom,0px)}nav button{flex:1;padding:14px 4px;border:0;background:none;color:var(--m);font:inherit;font-weight:700;border-top:3px solid transparent}nav button.on{color:var(--p);border-top-color:var(--p)}
+footer{display:flex;gap:8px;margin-top:20px}footer .bt{margin:0;border-style:solid}
+:focus-visible{outline:2px solid var(--p);outline-offset:2px}
+</style></head><body>
+<header><b>دفتر شخصی</b><small id="dt"></small></header><main id="v"></main>
+<nav><button data-a="t:i" data-t="i">اقساط ماهانه</button><button data-a="t:l" data-t="l">وام‌ها</button><button data-a="t:c" data-t="c">خودرو</button></nav>
+<script>
+const K='dafter1',$=s=>document.querySelector(s),f=n=>(+n||0).toLocaleString('fa-IR'),E=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NUM=s=>+String(s==null?'':s).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[,٬،\s]/g,'')||0;
+const ask=(m,v)=>{const r=prompt(m,v==null?'':v);return r===null?null:r.trim()},jd=()=>new Date().toLocaleDateString('fa-IR-u-ca-persian'),jm=()=>new Date().toLocaleDateString('fa-IR-u-ca-persian',{month:'long',year:'numeric'});
+const D0={tab:'i',inst:{label:'',sal:0,items:[]},loans:[],car:{km:0,items:[],notes:[]}};
+let S;try{S=JSON.parse(localStorage.getItem(K))}catch(e){}S=S||JSON.parse(JSON.stringify(D0));
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+function vi(){const I=S.inst,it=I.items,sm=(k,d)=>it.filter(x=>x.k==k&&(!d||x.d)).reduce((s,x)=>s+x.a,0),P=sm('p'),Rc=sm('r'),rem=I.sal-(P-Rc);
+const row=(x,i)=>`<div class="r"><input type="checkbox" ${x.d?'checked':''} data-a="tg:${i}" aria-label="انجام شد"><div class="n"><b>${E(x.n)}</b><small>${[x.t,x.l&&'آخرین قسط: '+x.l].filter(Boolean).map(E).join(' — ')}</small></div><span class="a">${f(x.a)}</span><button class="ic" data-a="ed:${i}" aria-label="ویرایش">✏️</button><button class="ic" data-a="rm:${i}" aria-label="حذف">🗑</button></div>`;
+const sec=(k,h)=>`<h3>${h}</h3>`+(it.map((x,i)=>x.k==k?row(x,i):'').join('')||'<p class="m">موردی ثبت نشده.</p>')+`<button class="bt" data-a="add:${k}">＋ افزودن</button>`;
+return `<div class="g"><div class="cd"><span>حقوق</span><b>${f(I.sal)}</b><button class="ic" data-a="sal" aria-label="ویرایش حقوق">✏️</button></div><div class="cd"><span>جمع پرداخت‌ها</span><b>${f(P)}</b></div><div class="cd"><span>دریافتی‌ها</span><b>${f(Rc)}</b></div><div class="cd hi"><span>باقی‌مانده</span><b class="${rem<0?'neg':''}">${f(rem)}</b></div><div class="cd"><span>سهم هر هفته</span><b>${f(Math.round(rem/4))}</b></div><div class="cd"><span>هنوز پرداخت نشده</span><b>${f(P-sm('p',1))}</b></div></div><p class="m">مبالغ به هزار تومان${I.label?' — '+E(I.label):''}</p>`+sec('p','پرداخت‌ها')+sec('r','دریافتی‌ها')+`<button class="bt" data-a="month">شروع ماه جدید (تیک‌ها پاک می‌شود)</button>`}
+function vl(){return (S.loans.map((l,i)=>{const pd=l.p.reduce((s,x)=>s+x.a,0),pc=l.t?Math.min(100,Math.round(pd*100/l.t)):0;return `<div class="cd2"><div class="h"><b>${E(l.n)}</b><span><button class="ic" data-a="le:${i}" aria-label="ویرایش">✏️</button><button class="ic" data-a="lr:${i}" aria-label="حذف">🗑</button></span></div><div class="bar"><i style="width:${pc}%"></i></div><p class="m">کل ${f(l.t)} — پرداخت‌شده ${f(pd)} — مانده <b>${f(l.t-pd)}</b> (${f(pc)}٪)</p>${l.p.map((x,j)=>`<div class="r"><div class="n">${E(x.d)}</div><span class="a">${f(x.a)}</span><button class="ic" data-a="lx:${i}|${j}" aria-label="حذف قسط">🗑</button></div>`).join('')}<button class="bt" data-a="lp:${i}">＋ ثبت قسط پرداخت‌شده</button></div>`}).join('')||'<p class="m">وامی ثبت نشده.</p>')+`<button class="bt" data-a="la">＋ وام جدید</button><p class="m">مبالغ به هزار تومان.</p>`}
+function vc(){const c=S.car,km=c.km,o=c.items.map((x,i)=>({x,i,r:x.x?x.x-km:null})).sort((a,b)=>(a.r==null)-(b.r==null)||a.r-b.r);
+return `<div class="cd"><span>کیلومتر فعلی</span><b>${km?f(km):'ثبت نشده'}</b><button class="ic" data-a="km" aria-label="ویرایش کیلومتر">✏️</button></div><h3>سرویس‌ها و قطعات</h3>`+o.map(({x,i,r})=>{const cl=!km||r==null?'':r<=0?'neg':r<1000?'wn':'ok',tx=r==null?'ثبت نشده':!km?'':r<=0?f(-r)+' کیلومتر گذشته':f(r)+' کیلومتر مانده',pc=km&&x.x&&x.e?Math.max(0,Math.min(100,Math.round((km-(x.x-x.e))*100/x.e))):0;return `<div class="r"><div class="n"><b>${E(x.n)}</b><small>آخرین: ${x.l?f(x.l):'—'} — بعدی: ${x.x?f(x.x):'—'} — هر ${f(x.e)}</small><i class="pb"><u class="${cl}" style="width:${pc}%"></u></i></div><span class="a ${cl}">${tx}</span><button class="ic" data-a="cd:${i}" aria-label="انجام شد">✔️</button><button class="ic" data-a="ce:${i}" aria-label="ویرایش">✏️</button><button class="ic" data-a="cr:${i}" aria-label="حذف">🗑</button></div>`}).join('')+`<button class="bt" data-a="ca">＋ مورد جدید</button><h3>سایر توضیحات و تعمیرات</h3>`+c.notes.map((n,i)=>`<div class="r"><div class="n"><small>${E(n.d)}</small>${E(n.t)}</div><button class="ic" data-a="nr:${i}" aria-label="حذف">🗑</button></div>`).join('')+`<button class="bt" data-a="na">＋ یادداشت جدید</button>`}
+function R(){const em=!S.inst.items.length&&!S.loans.length&&!S.car.items.length;$('#v').innerHTML=(em?'<p class="m">برای شروع، «بازیابی» پایین صفحه را بزنید و فایل پشتیبان را انتخاب کنید، یا موردها را با دکمه‌ی «افزودن» وارد کنید.</p>':'')+({i:vi,l:vl,c:vc})[S.tab]()+`<footer><button class="bt" data-a="bk">پشتیبان‌گیری</button><label class="bt" style="margin:0;border-style:solid">بازیابی<input type="file" accept=".json" id="rs" hidden></label></footer>`;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==S.tab))}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const[a,v]=b.dataset.a.split(':'),i=+v,I=S.inst,C=S.car;
+if(a=='t')S.tab=v;else if(a=='tg')I.items[i].d^=1;
+else if(a=='ed'){const x=I.items[i],n=ask('عنوان',x.n),m=n===null?null:ask('مبلغ (هزار تومان)',x.a),t=m===null?null:ask('توضیحات',x.t),l=t===null?null:ask('آخرین قسط (اختیاری)',x.l);if(l===null)return;Object.assign(x,{n:n||x.n,a:NUM(m),t,l})}
+else if(a=='rm'){if(!confirm('این مورد حذف شود؟'))return;I.items.splice(i,1)}
+else if(a=='add'){const n=ask('عنوان');if(!n)return;const m=ask('مبلغ (هزار تومان)');if(m===null)return;I.items.push({n,a:NUM(m),k:v,t:'',l:'',d:0})}
+else if(a=='sal'){const m=ask('حقوق ماهانه (هزار تومان)',I.sal);if(m===null)return;I.sal=NUM(m)}
+else if(a=='month'){const l=ask('نام ماه جدید',jm());if(l===null)return;I.label=l;I.items.forEach(x=>x.d=0)}
+else if(a=='la'){const n=ask('عنوان وام');if(!n)return;const t=ask('مبلغ کل (هزار تومان)');if(t===null)return;S.loans.push({n,t:NUM(t),p:[]})}
+else if(a=='le'){const l=S.loans[i],n=ask('عنوان وام',l.n),t=n===null?null:ask('مبلغ کل (هزار تومان)',l.t);if(t===null)return;l.n=n||l.n;l.t=NUM(t)}
+else if(a=='lr'){if(!confirm('این وام و همه‌ی اقساطش حذف شود؟'))return;S.loans.splice(i,1)}
+else if(a=='lp'){const m=ask('مبلغ قسط (هزار تومان)');if(!m||!NUM(m))return;const d=ask('تاریخ',jd());if(d===null)return;S.loans[i].p.push({d,a:NUM(m)})}
+else if(a=='lx'){const[x,y]=v.split('|');if(!confirm('این قسط حذف شود؟'))return;S.loans[x].p.splice(y,1)}
+else if(a=='km'){const m=ask('کیلومتر فعلی',C.km||'');if(m===null)return;C.km=NUM(m)}
+else if(a=='cd'){const x=C.items[i];if(!C.km){const m=ask('کیلومتر فعلی');if(!m)return;C.km=NUM(m)}if(!x.e){const m=ask('هر چند کیلومتر یک بار؟');if(!m)return;x.e=NUM(m)}x.l=C.km;x.x=C.km+x.e}
+else if(a=='ce'){const x=C.items[i],n=ask('عنوان',x.n),l=n===null?null:ask('کیلومتر آخرین انجام',x.l),y=l===null?null:ask('کیلومتر بعدی',x.x),z=y===null?null:ask('فاصله‌ی هر بار (کیلومتر)',x.e);if(z===null)return;Object.assign(x,{n:n||x.n,l:NUM(l),x:NUM(y),e:NUM(z)})}
+else if(a=='cr'){if(!confirm('این مورد حذف شود؟'))return;C.items.splice(i,1)}
+else if(a=='ca'){const n=ask('عنوان');if(!n)return;const z=ask('هر چند کیلومتر یک بار؟');if(z===null)return;C.items.push({n,l:0,x:0,e:NUM(z)})}
+else if(a=='na'){const t=ask('توضیحات');if(!t)return;const d=ask('تاریخ',jd());if(d===null)return;C.notes.unshift({d,t})}
+else if(a=='nr'){if(!confirm('این یادداشت حذف شود؟'))return;C.notes.splice(i,1)}
+else if(a=='bk'){const u=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'})),k=document.createElement('a');k.href=u;k.download='dafter-'+Date.now()+'.json';k.click();return}
+else return;save();R()});
+document.addEventListener('change',e=>{if(e.target.id!='rs'||!e.target.files[0])return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.inst||!d.loans||!d.car)throw 0;if(!confirm('داده‌های فعلی با فایل پشتیبان جایگزین شود؟'))return;S=d;save();R()}catch(x){alert('فایل پشتیبان معتبر نیست.')}};r.readAsText(e.target.files[0])});
+$('#dt').textContent=jd();R();if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
